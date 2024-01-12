@@ -2,14 +2,16 @@
 
 function template_main()
 {
-	global $context, $settings, $scripturl, $txt;
+	global $context, $scripturl, $txt;
 
 	// Show the good or bad news, if any.
 	if (isset($context['bookmark_result']))
+	{
 		echo '
 			<div class="infobox" id="profile_success">
 				', $context['bookmark_result'], '
 			</div>';
+	}
 
 	// We know how to sprite these
 	$message_icon_sprite = array('clip' => '', 'lamp' => '', 'poll' => '', 'question' => '', 'xx' => '', 'moved' => '', 'exclamation' => '', 'thumbup' => '', 'thumbdown' => '');
@@ -17,7 +19,9 @@ function template_main()
 	$not_empty = !empty($context['bookmarks']);
 
 	if ($not_empty)
+	{
 		template_pagesection('normal_buttons', 'right');
+	}
 
 	// Let's get the show moving.
 	echo '
@@ -53,8 +57,10 @@ function template_main()
 								<p class="topic_icons', isset($message_icon_sprite[$topic['first_post']['icon']]) ? ' topicicon i-' . $topic['first_post']['icon'] : '', '">';
 
 			if (!isset($message_icon_sprite[$topic['first_post']['icon']]))
+			{
 				echo '
 									<img src="', $topic['first_post']['icon_url'], '" alt="" />';
+			}
 
 			echo '
 								</p>
@@ -63,13 +69,15 @@ function template_main()
 
 			// Any new replies?
 			if ($topic['new'])
+			{
 				echo '
 								<a class="new_posts" href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '">' . $txt['new'] . '</a>';
+			}
 
 			// Show the board the topic was posted in, as well as a link to the profile of the topic starter
 			echo
-								$topic['first_post']['link'],
-								'<br />
+			$topic['first_post']['link'],
+			'<br />
 								<span class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></span>
 							</td>
 							<td>', $topic['first_post']['member']['link'], '</td>
@@ -93,7 +101,7 @@ function template_main()
 				</table>
 				<div class="submitbutton">
 					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input class="button_submit" type="submit" name="send" value="', $txt['bookmark_delete'], '" />
+					<input type="submit" name="send" value="', $txt['bookmark_delete'], '" />
 				</div>
 			</form>';
 	}
@@ -105,5 +113,7 @@ function template_main()
 	}
 
 	if ($not_empty)
+	{
 		template_pagesection('normal_buttons', 'right');
+	}
 }
