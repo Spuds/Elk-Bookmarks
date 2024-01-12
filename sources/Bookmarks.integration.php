@@ -5,12 +5,12 @@
  * @author Aaron
  * @license BSD http://opensource.org/licenses/BSD-3-Clause
  *
- * @version 1.0
+ * @version 1.0.1
  *
  */
 
 /**
- * - Not a lot of settings for this addon so we add them under the predefined
+ * Not a lot of settings for this addon so we add them under the predefined
  * Miscellaneous area of the forum
  *
  * @param array $config_vars
@@ -26,8 +26,9 @@ function bmks_integrate_general_mod_settings(&$config_vars)
 }
 
 /**
- * - Permissions hook, called from ManagePermissions.php
- * - used to add new permissions
+ * Permissions hook, called from ManagePermissions.php
+ *
+ * - Used to add new permissions
  *
  * @param array $permissionGroups
  * @param array $permissionList
@@ -35,13 +36,8 @@ function bmks_integrate_general_mod_settings(&$config_vars)
  * @param array $hiddenPermissions
  * @param array $relabelPermissions
  */
-function bmks_integrate_load_permissions(
-	&$permissionGroups,
-	&$permissionList,
-	&$leftPermissionGroups,
-	&$hiddenPermissions,
-	&$relabelPermissions
-) {
+function bmks_integrate_load_permissions(&$permissionGroups, &$permissionList, &$leftPermissionGroups, &$hiddenPermissions, &$relabelPermissions)
+{
 	global $context;
 
 	loadLanguage('Bookmarks');
@@ -54,7 +50,7 @@ function bmks_integrate_load_permissions(
 }
 
 /**
- * used to remove information when a topic is being removed
+ * integrate_remove_topics, used to remove information when a topic is being removed
  *
  * @param int[] $topics
  */
@@ -65,7 +61,8 @@ function bmks_integrate_remove_topics($topics)
 }
 
 /**
- * called from Display.controller
+ * integrate_topic_query, called from Display.controller
+ *
  * @param array $topic_selects
  * @param array $topic_tables
  * @param array $topic_parameters
@@ -86,7 +83,8 @@ function bmks_integrate_topic_query(&$topic_selects, &$topic_tables, &$topic_par
 }
 
 /**
- * called from Display.controller
+ * integrate_display_topic, called from Display.controller
+ *
  * @param array $topicinfo
  */
 function bmks_integrate_display_topic($topicinfo)
@@ -102,7 +100,7 @@ function bmks_integrate_display_topic($topicinfo)
 }
 
 /**
- * called from Display.controller
+ * integrate_display_buttons, called from Display.controller
  *
  * - Used to add additional buttons to topic views
  */
@@ -117,7 +115,14 @@ function bmks_integrate_display_buttons()
 
 	loadLanguage('Bookmarks');
 
-	$url = $scripturl . '?action=bookmarks' . ($context['has_bookmark'] ? '' : ';sa=add;topic=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+	if ($context['has_bookmark'])
+	{
+		$url = $scripturl . '?action=bookmarks;sa=remove;remove_bookmark=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+	}
+	else
+	{
+		$url = $scripturl . '?action=bookmarks;sa=add;topic=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id'];
+	}
 
 	// Define the new button
 	$bookmarks = array('bookmarks' => array(
@@ -133,7 +138,7 @@ function bmks_integrate_display_buttons()
 }
 
 /**
- * called from Subs.php
+ * integrate_menu_buttons hook, called from Subs.php
  *
  * - Used to add top menu buttons
  *
@@ -143,9 +148,8 @@ function bmks_integrate_menu_buttons(&$buttons)
 {
 	global $scripturl, $txt, $modSettings;
 
-	$bookmarks_off = empty($modSettings['bookmarks_enabled']) || !allowedTo('make_bookmarks');
-
-	if ($bookmarks_off)
+	// Not enable or not allowed
+	if (empty($modSettings['bookmarks_enabled']) || !allowedTo('make_bookmarks'))
 	{
 		return;
 	}

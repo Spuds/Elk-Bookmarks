@@ -5,7 +5,7 @@
  * @author Aaron
  * @license BSD http://opensource.org/licenses/BSD-3-Clause
  *
- * @version 1.0.1
+ * @version 1.0.2
  *
  */
 
@@ -42,6 +42,7 @@ class Bookmarks_Controller extends Action_Controller
 			'main' => array($this, 'action_bookmarks_get', 'permission' => 'make_bookmarks'),
 			'add' => array($this, 'action_bookmarks_add', 'permission' => 'make_bookmarks'),
 			'delete' => array($this, 'action_bookmarks_delete', 'permission' => 'make_bookmarks'),
+			'remove' => array($this, 'action_bookmark_remove', 'permission' => 'make_bookmarks'),
 		);
 
 		// Your bookmark activity will end here if you don't have permission.
@@ -78,14 +79,15 @@ class Bookmarks_Controller extends Action_Controller
 	}
 
 	/**
-	 * Load this users bookmarks in to context for display
+	 * Load users bookmarks in to context for display
 	 */
 	public function action_bookmarks_get()
 	{
 		global $user_info, $context, $scripturl;
 
 		$total = getCountBookmarks($user_info['id']);
-		if (!$total) {
+		if (!$total)
+		{
 			$context['bookmarks'] = array();
 
 			return;
@@ -109,7 +111,7 @@ class Bookmarks_Controller extends Action_Controller
 	 */
 	public function action_bookmarks_add()
 	{
-		global $user_info, $context;
+		global $user_info;
 
 		checkSession('get');
 
@@ -138,7 +140,7 @@ class Bookmarks_Controller extends Action_Controller
 	{
 		global $user_info;
 
-		checkSession('post');
+		checkSession();
 
 		// None to remove, what are you doing?
 		if (empty($_POST['remove_bookmarks']))
@@ -163,6 +165,35 @@ class Bookmarks_Controller extends Action_Controller
 		}
 
 		// reLoad this user's bookmarks
+		$this->action_bookmarks_get();
+	}
+
+	/**
+	 * Delete a single bookmark for a specific user.
+	 */
+	public function action_bookmark_remove()
+	{
+		global $user_info;
+
+		checkSession('get');
+
+		// None to remove, what are you doing?
+		if (empty($_GET['remove_bookmark']))
+		{
+			$this->_result = 'bookmark_delete_failure';
+		}
+		else
+		{
+			$topic_ids = (int) $_GET['remove_bookmark'];
+
+			// Remove it
+			$result = deleteBookmarks($user_info['id'], (array) $topic_ids);
+
+			// Return success or failure.
+			$this->_result = $result ? array('bookmark_delete_success', $result) : 'bookmark_delete_failure';
+		}
+
+		// ReLoad this user's bookmarks
 		$this->action_bookmarks_get();
 	}
 }
