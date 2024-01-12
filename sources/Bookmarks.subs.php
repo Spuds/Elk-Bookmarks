@@ -5,7 +5,7 @@
  * @author Aaron
  * @license BSD http://opensource.org/licenses/BSD-3-Clause
  *
- * @version 1.0.1
+ * @version 1.0.2
  *
  */
 
@@ -142,7 +142,8 @@ function getBookmarks($id_member, $offset, $limit)
 	$bookmarks = array();
 	while ($row = $db->fetch_assoc($request))
 	{
-		censorText($row['subject']);
+		$row['first_subject'] = censor($row['first_subject']);
+		$row['last_subject'] = censor($row['last_subject']);
 
 		$bookmarks[$row['id_topic']] = array(
 			'id' => $row['id_topic'],
