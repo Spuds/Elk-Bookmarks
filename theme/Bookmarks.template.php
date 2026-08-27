@@ -130,24 +130,18 @@ function template_main()
 		}
 
 		echo '
-						<a class="topicicon i-last_post" href="', $topic['last_post']['href'], '" title="', $txt['last_post'], '"></a>
-						', $topic['last_post']['html_time'], '<br />
-						', $txt['by'], ' ', $topic['last_post']['member']['link'], '
-					</div>';
+					<span class="topic_latest_info">
+						<span>', $topic['last_post']['html_time'], '</span>
+						<span>', $txt['by'], ' ', $topic['last_post']['member']['link'], '</span>
+					</span>
+					<a class="topicicon i-last_post" href="', $topic['last_post']['href'], '" title="', $txt['last_post'], '"></a>
+				</div>';
 
 		// The stats section
 		echo '
 					<div class="topic_stats">
 						', $topic['replies'], ' ', $txt['replies'], '<br />
 						', $topic['views'], ' ', $txt['views'];
-
-		// Show likes?
-		if (!empty($modSettings['likes_enabled']))
-		{
-			echo '
-						<br />
-						', $topic['likes'], ' ', $txt['likes'];
-		}
 
 		echo '
 					</div>
