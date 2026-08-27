@@ -1,6 +1,6 @@
 <?php
 
-$txt['bookmarks_enabled'] = 'Enable Bookmarks';
+$txt['bookmarks_enabled'] = 'Enable the Bookmarks feature';
 $txt['bookmarks'] = 'My Bookmarks';
 $txt['bookmark_list'] = 'Bookmarks';
 $txt['bookmark'] = 'Bookmark';

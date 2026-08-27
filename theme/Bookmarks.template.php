@@ -1,109 +1,173 @@
 <?php
 
+/**
+ * @package "Bookmarks" Addon for Elkarte
+ * @author Aaron
+ * @license BSD http://opensource.org/licenses/BSD-3-Clause
+ *
+ * @version 2.0.0
+ *
+ */
+
 function template_main()
 {
-	global $context, $settings, $scripturl, $txt;
+	global $context, $scripturl, $txt, $modSettings;
 
 	// Show the good or bad news, if any.
 	if (isset($context['bookmark_result']))
+	{
 		echo '
 			<div class="infobox" id="profile_success">
 				', $context['bookmark_result'], '
 			</div>';
 
-	// We know how to sprite these
-	$message_icon_sprite = array('clip' => '', 'lamp' => '', 'poll' => '', 'question' => '', 'xx' => '', 'moved' => '', 'exclamation' => '', 'thumbup' => '', 'thumbdown' => '');
+		unset($context['bookmark_result']);
+	}
 
-	$not_empty = !empty($context['bookmarks']);
-
-	if ($not_empty)
+	if (!empty($context['bookmarks']))
+	{
 		template_pagesection('normal_buttons', 'right');
+	}
 
-	// Let's get the show moving.
 	echo '
-			<h3 class="category_header">', $txt['bookmark_list'], '</h3>';
+	<h2 class="category_header hdicon i-bookmark">', $txt['bookmark_list'], '</h2>
+	<form class="clear" action="', $scripturl, '?action=bookmarks;sa=delete" method="post" accept-charset="UTF-8" name="bookmarkForm" id="bookmarkForm">
+		<main>
+			<ul class="topic_listing" id="messageindex">';
 
-	// Show the bookmarks, if any.
-	if ($not_empty)
+	// Show a message saying there aren't any bookmarks yet
+	if (empty($context['bookmarks']))
 	{
 		echo '
-			<form class="generic_list_wrapper" action="', $scripturl, '?action=bookmarks;sa=delete" method="post">
-				<table class="table_grid">
-					<thead>
-						<tr class="table_head">
-							<th style="width:50px;"></th>
-							<th class="grid33">', $txt['subject'], '</th>
-							<th class="nowrap">', $txt['started_by'], '</th>
-							<th class="centertext">', $txt['replies'], '</th>
-							<th class="centertext">', $txt['views'], '</th>
-							<th class="grid25">', $txt['latest_post'], '</th>
-							<th class="centertext">
-								<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);" />
-							</th>
-						</tr>
-					</thead>
-					<tbody>';
+				<li class="basic_row">
+					<div class="topic_info">
+						<div class="topic_name">
+							<h4>
+								<strong>', $txt['bookmark_list_empty'], '</strong>
+							</h4>
+						</div>
+					</div>
+				</li>';
+	}
 
-		foreach ($context['bookmarks'] as $topic)
+	foreach ($context['bookmarks'] as $topic)
+	{
+		$color_class = 'basic_row';
+
+		// We start with locked and sticky topics.
+		if ($topic['is_sticky'] && $topic['is_locked'])
 		{
-			// Show the topic's subject
+			$color_class = 'locked_row sticky_row';
+		}
+		// Sticky topics should get a different color, too.
+		elseif ($topic['is_sticky'])
+		{
+			$color_class = 'sticky_row';
+		}
+		// Locked topics get special treatment as well.
+		elseif ($topic['is_locked'])
+		{
+			$color_class = 'locked_row';
+		}
+
+		// First up the message icon
+		echo '
+				<li class="' . $color_class . '">
+					<div class="topic_icons', empty($modSettings['messageIcons_enable']) ? ' topicicon i-' . $topic['first_post']['icon'] : '', '">';
+
+		if (!empty($modSettings['messageIcons_enable']))
+		{
 			echo '
-						<tr>
-							<td>
-								<p class="topic_icons', isset($message_icon_sprite[$topic['first_post']['icon']]) ? ' topicicon img_' . $topic['first_post']['icon'] : '', '">';
-
-			if (!isset($message_icon_sprite[$topic['first_post']['icon']]))
-				echo '
-									<img src="', $topic['first_post']['icon_url'], '" alt="" />';
-
-			echo '
-								</p>
-							</td>
-							<td>';
-
-			// Any new replies?
-			if ($topic['new'])
-				echo '<a class="new_posts" href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '">' . $txt['new'] . '</a>';
-
-			// Show the board the topic was posted in, as well as a link to the profile of the topic starter
-			echo
-								$topic['first_post']['link'],
-								'<br />
-								<span class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></span>
-							</td>
-							<td>', $topic['first_post']['member']['link'], '</td>
-							<td class="centertext">', $topic['replies'], '</td>
-							<td class="centertext">', $topic['views'], '</td>
-							<td>
-								<a href="', $topic['last_post']['href'], '">
-								<img class="floatright" src="', $settings['images_url'], '/icons/last_post.png" alt="', $txt['last_post'], '" title="', $txt['last_post'], '" /></a>
-								<span class="smalltext">
-									', $topic['last_post']['time'], '<br />
-									', $txt['by'], ' ', $topic['last_post']['member']['link'], '
-								</span>
-							</td>
-							<td class="centertext">
-								<input type="checkbox" name="remove_bookmarks[]" value="', $topic['id'], '" class="input_check" />
-							</td>
-						</tr>';
+						<img src="', $topic['first_post']['icon_url'], '" alt="" />';
 		}
 
 		echo '
-					</tbody>
-				</table>
-				<div class="submitbutton">
-					<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-					<input class="button_submit" type="submit" name="send" value="', $txt['bookmark_delete'], '" />
-				</div>
-			</form>';
-	}
-	// Show a message saying there aren't any bookmarks yet
-	else
-	{
+						', !empty($topic['is_posted_in']) ? '<span class="fred topicicon i-profile"></span>' : '', '
+					</div>';
+
+		// The subject/poster section
 		echo '
-			<div class="description">', $txt['bookmark_list_empty'], '</div>';
+					<div class="topic_info">
+						<div class="topic_name" ', (empty($topic['quick_mod']['modify']) ? '' : 'id="topic_' . $topic['first_post']['id'] . '"  ondblclick="oQuickModifyTopic.modify_topic(\'' . $topic['id'] . "', '" . $topic['first_post']['id'] . '\');"'), '>
+							<h4>';
+
+		// Is this topic new? (assuming they are logged in!)
+		if ($topic['new'] && $context['user']['is_logged'])
+		{
+			echo '
+								<a class="new_posts" href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '">' . $txt['new'] . '</a>';
+		}
+
+		echo '
+								', $topic['is_sticky'] ? '<strong>' : '', '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</strong>' : '', '
+							</h4>
+						</div>
+						<div class="topic_starter">
+							', sprintf($txt['topic_started_by'], $topic['first_post']['member']['link']), empty($topic['pages']) ? '' : '
+							<ul class="small_pagelinks" id="pages' . $topic['first_post']['id'] . '">' . $topic['pages'] . '</ul>', '
+						</div>
+					</div>';
+
+		// The last poster info, avatar, when
+		echo '
+					<div class="topic_latest">';
+
+		if (!empty($topic['last_post']['member']['avatar']))
+		{
+			echo '
+						<span class="board_avatar">
+							<a href="', $topic['last_post']['member']['href'], '">
+								<img class="avatar" src="', $topic['last_post']['member']['avatar']['href'], '" alt="', $topic['last_post']['member']['name'], '" loading="lazy" />
+							</a>
+						</span>';
+		}
+		else
+		{
+			echo '
+						<span class="board_avatar">
+							<a href="#"></a>
+						</span>';
+		}
+
+		echo '
+						<a class="topicicon i-last_post" href="', $topic['last_post']['href'], '" title="', $txt['last_post'], '"></a>
+						', $topic['last_post']['html_time'], '<br />
+						', $txt['by'], ' ', $topic['last_post']['member']['link'], '
+					</div>';
+
+		// The stats section
+		echo '
+					<div class="topic_stats">
+						', $topic['replies'], ' ', $txt['replies'], '<br />
+						', $topic['views'], ' ', $txt['views'];
+
+		// Show likes?
+		if (!empty($modSettings['likes_enabled']))
+		{
+			echo '
+						<br />
+						', $topic['likes'], ' ', $txt['likes'];
+		}
+
+		echo '
+					</div>
+					<div class="topic_moderation">
+						<input type="checkbox" name="remove_bookmarks[]" aria-label="check ', $topic['id'], '" value="', $topic['id'], '" />
+					</div>
+				</li>';
 	}
 
-	if ($not_empty)
+	echo '
+			</ul>
+		</main>
+		<div class="submitbutton">
+			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
+			<input type="submit" name="send" value="', $txt['bookmark_delete'], '" />
+		</div>
+	</form>';
+
+	if (!empty($context['bookmarks']))
+	{
 		template_pagesection('normal_buttons', 'right');
+	}
 }

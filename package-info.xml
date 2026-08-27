@@ -1,73 +1,42 @@
 <?xml version="1.0"?>
-<!DOCTYPE package-info SYSTEM "http://www.elkarte.net/site/package-info">
-<package-info xmlns="http://www.elkarte.net/site/package-info" xmlns:elk="http://www.elkarte.net/">
+<!DOCTYPE package-info SYSTEM "https://www.elkarte.net/site/package-info">
+<package-info xmlns="https://www.elkarte.net/site/package-info" xmlns:elk="https://www.elkarte.net/">
 	<name>Bookmarks</name>
 	<id>aaronvg:bookmarks</id>
 	<type>addon</type>
-	<version>2.6.0</version>
+	<version>2.0.0</version>
 
-	<install for="1.0 - 1.0.99">
-		<require-file name="sources/Bookmarks.controller.php" destination="CONTROLLERDIR" />
-		<require-file name="sources/Bookmarks.subs.php" destination="SUBSDIR" />
-		<require-file name="sources/Bookmarks.integration.php" destination="SOURCEDIR" />
+	<install for="2.0.0 Beta 1 - 2.0.99">
+		<require-dir name="Bookmarks" destination="ADDONSDIR" />
+		<require-dir name="Languages/Bookmarks" destination="LANGUAGEDIR" />
+
 		<require-file name="theme/Bookmarks.template.php" destination="THEMEDIR" />
-		<require-file name="theme/Bookmarks.english.php" destination="LANGUAGEDIR/english" />
-		<require-file name="theme/Bookmarks.french.php" destination="LANGUAGEDIR/french" />
-		<require-file name="theme/Bookmarks.turkish.php" destination="LANGUAGEDIR/turkish" />
-		<require-file name="theme/Bookmarks.german.php" destination="LANGUAGEDIR/german" />
-		<require-file name="theme/Bookmarks.italian.php" destination="LANGUAGEDIR/italian" />
-		<require-file name="theme/Bookmarks.russian.php" destination="LANGUAGEDIR/russian" />
-		<hook hook="integrate_general_mod_settings" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_general_mod_settings" />
-		<hook hook="integrate_load_permissions" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_load_permissions" />
-		<hook hook="integrate_remove_topics" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_remove_topics" />
-		<hook hook="integrate_display_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_buttons" />
-		<hook hook="integrate_menu_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_menu_buttons" />
-		<hook hook="integrate_topic_query" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_topic_query" />
-		<hook hook="integrate_display_topic" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_topic" />
+
+		<hook hook="integrate_general_mod_settings" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_general_mod_settings" />
+		<hook hook="integrate_load_permissions" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_load_permissions" />
+		<hook hook="integrate_remove_topics" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_remove_topics" />
+		<hook hook="integrate_display_buttons" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_display_buttons" />
+		<hook hook="integrate_menu_buttons" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_menu_buttons" />
+		<hook hook="integrate_topic_query" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_topic_query" />
+		<hook hook="integrate_display_topic" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_display_topic" />
+
 		<database type="file">install.php</database>
 		<redirect url="index.php?action=admin;area=addonsettings;sa=general" timeout="5000">redirect.txt</redirect>
 	</install>
 
-	<install for="1.1 - 1.1.99">
-		<require-file name="sources/Bookmarks.controller.php" destination="CONTROLLERDIR" />
-		<require-file name="sources/Bookmarks.subs.php" destination="SUBSDIR" />
-		<require-file name="sources/Bookmarks.integration.php" destination="SOURCEDIR" />
-		<require-file name="theme/1.1/Bookmarks.template.php" destination="THEMEDIR" />
-		<require-file name="theme/Bookmarks.english.php" destination="LANGUAGEDIR/english" />
-		<require-file name="theme/Bookmarks.french.php" destination="LANGUAGEDIR/french" />
-		<require-file name="theme/Bookmarks.turkish.php" destination="LANGUAGEDIR/turkish" />
-		<require-file name="theme/Bookmarks.german.php" destination="LANGUAGEDIR/german" />
-		<require-file name="theme/Bookmarks.italian.php" destination="LANGUAGEDIR/italian" />
-		<require-file name="theme/Bookmarks.russian.php" destination="LANGUAGEDIR/russian" />
-		<hook hook="integrate_general_mod_settings" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_general_mod_settings" />
-		<hook hook="integrate_load_permissions" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_load_permissions" />
-		<hook hook="integrate_remove_topics" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_remove_topics" />
-		<hook hook="integrate_display_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_buttons" />
-		<hook hook="integrate_menu_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_menu_buttons" />
-		<hook hook="integrate_topic_query" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_topic_query" />
-		<hook hook="integrate_display_topic" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_topic" />
-		<database type="file">install.php</database>
-		<redirect url="index.php?action=admin;area=addonsettings;sa=general" timeout="5000">redirect.txt</redirect>
-	</install>
+	<uninstall for="2.0.0 Beta 1 - 2.0.99">
+		<hook reverse="true" hook="integrate_general_mod_settings" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_general_mod_settings" />
+		<hook reverse="true" hook="integrate_load_permissions" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_load_permissions" />
+		<hook reverse="true" hook="integrate_remove_topics" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_remove_topics" />
+		<hook reverse="true" hook="integrate_display_buttons" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_display_buttons" />
+		<hook reverse="true" hook="integrate_menu_buttons" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_menu_buttons" />
+		<hook reverse="true" hook="integrate_topic_query" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_topic_query" />
+		<hook reverse="true" hook="integrate_display_topic" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_display_topic" />
 
-	<uninstall for="1.0 - 1.1.99">
-		<hook reverse="true" hook="integrate_general_mod_settings" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_general_mod_settings" />
-		<hook reverse="true" hook="integrate_load_permissions" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_load_permissions" />
-		<hook reverse="true" hook="integrate_remove_topics" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_remove_topics" />
-		<hook reverse="true" hook="integrate_display_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_buttons" />
-		<hook reverse="true" hook="integrate_menu_buttons" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_menu_buttons" />
-		<hook reverse="true" hook="integrate_topic_query" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_topic_query" />
-		<hook reverse="true" hook="integrate_display_topic" file="SOURCEDIR/Bookmarks.integration.php" function="bmks_integrate_display_topic" />
-		<remove-file name="CONTROLLERDIR/Bookmarks.controller.php" />
-		<remove-file name="SUBSDIR/Bookmarks.subs.php" />
-		<remove-file name="SOURCEDIR/Bookmarks.integration.php" />
+		<remove-dir name="LANGUAGEDIR/Bookmarks" />
+		<remove-dir name="ADDONSDIR/Bookmarks" />
+
 		<remove-file name="THEMEDIR/Bookmarks.template.php" />
-		<remove-file name="LANGUAGEDIR/english/Bookmarks.english.php" />
-		<remove-file name="LANGUAGEDIR/french/Bookmarks.french.php" />
-		<remove-file name="LANGUAGEDIR/turkish/Bookmarks.turkish.php" />
-		<remove-file name="LANGUAGEDIR/german/Bookmarks.german.php" />
-		<remove-file name="LANGUAGEDIR/italian/Bookmarks.italian.php" />
-		<remove-file name="LANGUAGEDIR/russian/Bookmarks.russian.php" />
 	</uninstall>
 
 </package-info>
