@@ -148,8 +148,6 @@ function bmks_integrate_display_buttons()
 	$bookmarks = ['bookmarks' => [
 		'test' => 'can_make_bookmarks',
 		'text' => $context['has_bookmark'] ? 'bookmark_exists' : 'bookmark',
-		'icon' => 'i-bookmark',
-		'linkclass' => 'buttonlist_icon',
 		'lang' => true,
 		'url' => $url
 	]];

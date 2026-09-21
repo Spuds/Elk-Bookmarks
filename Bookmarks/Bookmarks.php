@@ -35,7 +35,7 @@ class Bookmarks extends AbstractController
 	 */
 	public function action_bookmarks_main()
 	{
-		global $txt, $context, $scripturl;
+		global $txt, $context;
 
 		// All we know
 		$subActions = [
@@ -59,8 +59,8 @@ class Bookmarks extends AbstractController
 		$context['page_title'] = $txt['bookmarks'];
 
 		// Add it to the linktree
-		$context['linktree'][] = [
-			'url' => $scripturl . '?action=bookmarks',
+		$context['breadcrumbs'][] = [
+			'url' => getUrl('action', ['action' => 'bookmarks']),
 			'name' => $txt['bookmarks'],
 		];
 
