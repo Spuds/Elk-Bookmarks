@@ -6,7 +6,7 @@
 	<type>addon</type>
 	<version>2.0.0</version>
 
-	<install for="2.0.0 Beta 1 - 2.0.99">
+	<install for="2.0.0 Beta 2 - 2.0.99">
 		<require-dir name="Bookmarks" destination="ADDONSDIR" />
 		<require-dir name="Languages/Bookmarks" destination="LANGUAGEDIR" />
 
@@ -24,7 +24,7 @@
 		<redirect url="index.php?action=admin;area=addonsettings;sa=general" timeout="5000">redirect.txt</redirect>
 	</install>
 
-	<uninstall for="2.0.0 Beta 1 - 2.0.99">
+	<uninstall for="2.0.0 Beta 2 - 2.0.99">
 		<hook reverse="true" hook="integrate_general_mod_settings" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_general_mod_settings" />
 		<hook reverse="true" hook="integrate_load_permissions" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_load_permissions" />
 		<hook reverse="true" hook="integrate_remove_topics" file="ADDONSDIR/Bookmarks/BookmarksIntegrate.php" function="bmks_integrate_remove_topics" />
