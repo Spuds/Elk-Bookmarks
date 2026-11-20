@@ -140,10 +140,8 @@ function template_main()
 		// The stats section
 		echo '
 					<div class="topic_stats">
-						', $topic['replies'], ' ', $txt['replies'], '<br />
-						', $topic['views'], ' ', $txt['views'];
-
-		echo '
+						<span class="stat-item"><span class="stat_count">', $topic['replies'], '</span> ', $txt['replies'], '</span>
+						<span class="stat-item"><span class="stat_count">', $topic['views'], '</span> ', $txt['views'], '</span>
 					</div>
 					<div class="topic_moderation">
 						<input type="checkbox" name="remove_bookmarks[]" aria-label="check ', $topic['id'], '" value="', $topic['id'], '" />
